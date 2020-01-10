@@ -1,0 +1,4 @@
+jgrep usage：
+jgrep search_str search_dir file_extension
+eg：search get_boot_media in currnt_dir's c source file
+    jgrep get_boot_media ./ c
