@@ -2,4 +2,4 @@
 search_str=$1
 search_dir=$2
 file_extension=$3
-grep -rnHI $search_str $search_dir --include *.$file_extension | awk -F: '{ print $1 }' | awk -F. '{ print $2 }' | xargs -I {} ls .{}.o 2>/dev/null
+grep -rnwHI $search_str $search_dir --include *.$file_extension | awk -F: '{ print $1 }' | awk -F. '{ print $2 }' | xargs -I {} ls .{}.o 2>/dev/null
