@@ -1,0 +1,8 @@
+#!/bin/sh
+str=$1
+#for str in `find ./ -name '*.o'`
+#do
+    strings ${str} | grep '^\/'
+    strings ${str} | grep '^\.\/'
+    strings ${str} | grep '\.h'
+#done
