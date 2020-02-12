@@ -1,4 +1,8 @@
 jgrep usage：
 jgrep search_str search_dir file_extension
-eg：search get_boot_media in currnt_dir's c source file
+eg1：search get_boot_media in currnt_dir's c source file
     jgrep get_boot_media ./ c
+eg2: if obj file isn't in the same dir with source file,usage:
+    jgrep lbwdt_emergency_handler ./drivers/lonbon/ c obj/
+fixme:
+    only can use jgrep uboot's or kenel's root dir or make sure there is a dir
