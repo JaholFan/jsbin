@@ -1,4 +1,9 @@
 #!/bin/sh
+if [ $1 = "-h" ];then
+    echo "jgrep get_boot_media ./ c/S/h"
+    echo "jgrep lbwdt_emergency_handler ./drivers/lonbon/ c obj/"
+    exit 0
+fi
 search_str=$1
 search_dir=$2
 file_extension=$3
