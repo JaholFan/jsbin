@@ -1,0 +1,13 @@
+#!/bin/sh
+#awk '{
+#    if ( NR == 17 || NR == 27) print "29 01 06 "$2" "$1" "$6" "$5" "$4" "$3;
+#    else print "29 00 06 "$2" "$1" "$6" "$5" "$4" "$3;
+#}' ./temp
+var="0x"
+#echo $var
+#exit 0
+grep "29" temp > new
+awk '{
+    print "0x"$1" 0x"$3" 0x"$4" 0x"$5" 0x"$6" 0x"$7" 0x"$8" 0x"$9
+}' ./new > final
+echo "0xFF 0" >> final
