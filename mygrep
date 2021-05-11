@@ -1,23 +1,35 @@
 #!/bin/sh
 if [ "$1"x = "-h"x ];then
-    echo "mygrep get_boot_media ./ c/S/h"
-    echo "mygrep lbwdt_emergency_handler ./drivers/lonbon/ c obj/"
+    echo "mygrep ./ c/S/h search_str"   
+    echo "mygrep ./boot c/S/h search_str"
+    #echo "mygrep search_str search_dir c/S/h"
+    echo "mygrep ./drivers/lonbon/ c search_str obj/"
     exit 0
 fi
-search_str=$1
-search_dir=$2
-file_extension=$3
+
+search_dir=$1
+file_extension=$2
+search_str=$3
 obj_root_dir=.
 if [ x"$4" != x ];then
-    obj_root_dir=`echo "$4" | awk -F/ '{for(i=1;i<=NF-2;i++) printf $i"/";printf $(NF-1);printf "\n"}'`
+    obj_root_dir=`echo "$4" | awk -F/ '{for(i=1;i<=NF-2;i++) printf $i"/";printf $(NF-1);printf "\n"}'` 
 fi
 if [ ${file_extension} = "h" ];then
-    grep -rnwHI "$search_str" $search_dir --include *.h
+    grep --color -rnwHI "$search_str" $search_dir --include "*.h"
 else
     if [ x"$4" = x ];then
-        #grep -rnwHI "$search_str" $search_dir --include *.$file_extension | awk -F: '{ print $1 }' | awk -F. '{ print $2 }' | xargs -I {} ls .{}.o 2>/dev/null | awk -F. '{ print "."$2".'${file_extension}'" }' | sort | uniq
-        grep -rnwHI "$search_str" `grep -rnwHI "$search_str" $search_dir --include *.$file_extension | awk -F: '{ print $1 }' | awk -F. '{ print $2 }' | xargs -I {} ls .{}.o 2>/dev/null | awk -F. '{ print "."$2".'${file_extension}'" }' | sort | uniq`
+        targets=`grep -rnwHI "$search_str" $search_dir --include "*.$file_extension" | awk -F: '{ print $1 }' | awk -F. '{ print $2 }' | xargs -I {} ls .{}.o 2>/dev/null | awk -F. '{ print "."$2".'${file_extension}'" }' | sort | uniq`
+        if [ -n "$targets" ];then
+            grep --color -rnwHI "$search_str" $targets
+        fi
+        #grep --color -rnwHI "$search_str" `grep -rnwHI "$search_str" $search_dir --include "*.$file_extension" | awk -F: '{ print $1 }' | awk -F. '{ print $2 }' | xargs -I {} ls .{}.o 2>/dev/null | awk -F. '{ print "."$2".'${file_extension}'" }' | sort | uniq`
     else
-        grep -rnwsHI "$search_str" $search_dir --include *.$file_extension | awk -F: '{ print $1 }'| awk -F. '{ print $2 }' | uniq | xargs -I {} ls $obj_root_dir{}.o 2>/dev/null
+        for target in `grep -rnwsHI "$search_str" $search_dir --include "*.$file_extension" | awk -F: '{ print $1 }'| awk -F. '{ print $2 }' | uniq | xargs -I {} ls $obj_root_dir{}.o 2>/dev/null`
+        do
+            for tgt in `echo "."${target#*$obj_root_dir} | awk -F. '{ print "."$2".'${file_extension}'" }'`
+            do
+                grep --color -rnwsHI "$search_str" $tgt --include "*.$file_extension"
+            done
+        done
     fi
 fi
